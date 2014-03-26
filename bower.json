@@ -1,0 +1,26 @@
+{
+  "name": "Hiren-Bot",
+  "version": "0.0.2",
+  "homepage": "https://github.com/pyprism/Hiren-Bot",
+  "authors": [
+    "pyprism <git.pyprism@gmail.com>"
+  ],
+  "description": "Bing Search Bot",
+  "main": "?",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "~1.2.15",
+    "angular": "~1.2.15"
+  }
+}
