@@ -11,11 +11,8 @@ exports.index = function(req, res){
 
 
 exports.random = function (req,res){
-    var hiren = randomWords({ exactly: 10, join: ' ' });
-    res.json({ random : hiren }) ;
+    res.header('Access-Control-Allow-Origin', "*" );
+    var hiren = randomWords({ exactly: 5, join: ' ' });
+    res.json( hiren ) ;
 };
 
-
-exports.about = function(req ,res){
-  res.sendfile('public/about.html');
-};

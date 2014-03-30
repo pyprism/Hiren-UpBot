@@ -13,7 +13,7 @@ function changeIframe() {
 
 function runSearch(){
   var count = document.getElementById('count').value;
-  var searchQuery = createRandomWord();
+  var searchQuery = createRandomWordx();
   document.getElementById('bingIframe').src = 'http://www.bing.com/search?q=' + searchQuery + '+&go=&qs=n&sk=&form=QBLH';
   count = count - 1;
   document.getElementById('count').value = count;
@@ -51,6 +51,13 @@ function createRandomWord() {
     word += (i===0) ? randConsonant.toUpperCase() : randConsonant;
     word += i*2<length-1 ? randVowel : '';
   }
+
   return word;
 }
 
+function createRandomWordx(){
+    var xhReq = new XMLHttpRequest();
+    xhReq.open("GET", "http://localhost:3000/random", false);
+    xhReq.send(null);
+    return JSON.parse(xhReq.responseText);
+}
