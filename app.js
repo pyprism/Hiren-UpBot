@@ -7,7 +7,6 @@ var express = require('express');
 var routes = require('./routes');
 var http = require('http');
 var path = require('path');
-require('newrelic');
 var app = express();
 
 // all environments
@@ -30,7 +29,7 @@ app.get('/random', routes.random);
 
 //funny 404 :D
 app.get('*', function(req, res){
-    res.sendfile('public/images/404.gif') ;;
+    res.sendfile('public/images/404.gif') ;
 });
 //change the ip
 http.createServer(app).listen(app.get('port'), function(){
