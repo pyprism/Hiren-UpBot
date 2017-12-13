@@ -2,22 +2,24 @@ package main
 
 import (
 	"log"
-	"github.com/julienschmidt/httprouter"
-	"net/http"
+	"github.com/gin-gonic/gin"
+	"github.com/pyprism/Hiren-UpBot/views"
 	"fmt"
 )
 
-func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params)  {
-	fmt.Fprint(w, "login")
-}
+
 
 func main() {
-	router := httprouter.New()
-	router.GET("/", Login)
+	router := gin.Default()
+	router.Static("/static", "./static")
+	router.LoadHTMLGlob("templates/*")
 
-	PORT := "127.0.0.1:8000"
+	router.GET("/", views.Login)
+	router.POST("/", views.Login)
+
+	PORT := ":8000"
 	fmt.Println("Server running on:", PORT)
-	log.Fatal(http.ListenAndServe(PORT, nil))
+	log.Fatal(router.Run(PORT))
 }
 
 
