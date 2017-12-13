@@ -34,6 +34,13 @@
     <div class="card">
         <div class="body">
             <form id="sign_in" method="POST">
+                {{ if .status }}
+                <div class="alert alert-danger" role="alert">
+                    <ul class="messages">
+                        {{ .status }}
+                    </ul>
+                </div>
+                {{ end }}
                 <div class="msg">Sign Up</div>
                 <div class="input-group">
                         <span class="input-group-addon">
