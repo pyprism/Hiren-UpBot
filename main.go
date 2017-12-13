@@ -4,7 +4,7 @@ import (
 	"log"
 	"github.com/gin-gonic/gin"
 	"github.com/pyprism/Hiren-UpBot/views"
-	"fmt"
+	"os"
 )
 
 
@@ -16,9 +16,10 @@ func main() {
 
 	router.GET("/", views.Login)
 	router.POST("/", views.Login)
+	router.GET("/signup/", views.SignUp)
+	router.POST("/signup/", views.SignUp)
 
-	PORT := ":8000"
-	fmt.Println("Server running on:", PORT)
+	PORT := os.Getenv("PORT")
 	log.Fatal(router.Run(PORT))
 }
 
