@@ -2,10 +2,22 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/danielkov/gin-helmet"
+  packages = ["."]
+  revision = "1387e224435edcb84dfc4bfc81fe56fc807ca98b"
+
+[[projects]]
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
   revision = "629574ca2a5df945712d3079857300b5e4da0236"
   version = "v1.4.2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/gin-contrib/gzip"
+  packages = ["."]
+  revision = "ce345a8285089c0917000e9ce23e6768a60ad7bc"
 
 [[projects]]
   branch = "master"
@@ -136,6 +148,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "111f1fd4c117c2aaad106f9118fc86b005d8266939b18f735eb61d1db432ff2f"
+  inputs-digest = "c376ed27746c5ee8a5b4f7ff309abc3a5cb33c35f206641495cf6bf95274c99f"
   solver-name = "gps-cdcl"
   solver-version = 1
