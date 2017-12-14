@@ -7,12 +7,20 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
+	"github.com/danielkov/gin-helmet"
+	"github.com/gin-contrib/gzip"
+	"github.com/pyprism/Hiren-UpBot/models"
 	"log"
-	"os"
+	//"os"
 )
 
 func main() {
 	router := gin.Default()
+
+	//middleware
+	router.Use(helmet.Default())
+	router.Use(gzip.Gzip(gzip.BestCompression))
+
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/*")
 
@@ -31,6 +39,7 @@ func main() {
 		panic("failed to connect database")
 	}
 	defer db.Close()
+	db.AutoMigrate(&models.User{})
 
 	// routers
 	router.GET("/", views.Login)
