@@ -6,6 +6,9 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg"
+	"github.com/go-xorm/core"
+	"github.com/go-xorm/xorm"
+	_ "github.com/lib/pq"
 	"github.com/pyprism/Hiren-UpBot/models"
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
@@ -32,16 +35,20 @@ func main() {
 	}
 
 	// database
-	db := pg.Connect(&pg.Options{
-		Database: viper.GetString("db_name"),
-		User:     viper.GetString("db_user"),
-		Password: viper.GetString("db_password"),
-	})
+	connStr := "host=localhost" + " user=" + viper.GetString("db_user") +
+		" dbname=" + viper.GetString("db_name") + " sslmode=disable" + " password=" + viper.GetString("db_password")
+	db, dbErr := xorm.NewEngine("postgres", connStr)
+	if dbErr != nil {
+		panic(dbErr)
+	}
 
 	//dbErr := createSchema(db)
 	//if dbErr != nil {
 	//	panic(dbErr)
 	//}
+	db.ShowSQL(true)
+	db.Logger().SetLevel(core.LOG_DEBUG)
+	db.SetMapper(SameMapper{})
 	defer db.Close()
 
 	// routers
@@ -51,14 +58,4 @@ func main() {
 	router.POST("/signup/", views.SignUp)
 
 	log.Fatal(router.Run(viper.GetString("port")))
-}
-
-func createSchema(db *pg.DB) error {
-	for _, model := range []interface{}{&models.User{}} {
-		err := db.CreateTable(model, nil)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }
