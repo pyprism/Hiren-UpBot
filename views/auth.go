@@ -3,24 +3,24 @@ package views
 import (
 	"fmt"
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-pg/pg"
+
 	"github.com/pyprism/Hiren-UpBot/models"
 	"github.com/spf13/viper"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	//"golang.org/x/crypto/bcrypt"
-	//"github.com/pyprism/Hiren-UpBot/models"
 )
 
 type LoginForm struct {
-	User string `form:"username" binding:"required"`
+	User     string `form:"username" binding:"required"`
 	Password string `form:"password" binding:"required"`
 }
 
-var db *gorm.DB
+var db *pg.DB
 
-func init()  {
+func init() {
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
 	err := viper.ReadInConfig()
@@ -28,21 +28,28 @@ func init()  {
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
 
-	db, err := gorm.Open("postgres", "host=localhost"+" user="+viper.GetString("db_user")+
-		" dbname="+viper.GetString("db_name")+" sslmode=disable"+" password="+viper.GetString("db_password"))
+	db := pg.Connect(&pg.Options{
+		Database: viper.GetString("db_name"),
+		User:     viper.GetString("db_user"),
+		Password: viper.GetString("db_password"),
+	})
+	fmt.Println(reflect.TypeOf(db))
+	count, err := db.Model(&models.User{}).Count()
 	if err != nil {
-		panic("failed to connect database")
+		panic(err)
 	}
-	defer db.Close()
+
+	fmt.Println(count)
+	//defer db.Close()
 }
 
-
-func Login(c *gin.Context)  {
+func Login(c *gin.Context) {
 	if c.Request.Method == "GET" {
+		fmt.Println("s")
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{})
 	} else if c.Request.Method == "POST" {
 		var form LoginForm
-		if err:=c.ShouldBind(&form); err == nil {
+		if err := c.ShouldBind(&form); err == nil {
 			if form.User == "demo" && form.Password == "demo" {
 				c.HTML(http.StatusAccepted, "login.tmpl", gin.H{"status": "connected"})
 			} else {
@@ -57,14 +64,10 @@ func Login(c *gin.Context)  {
 
 func SignUp(c *gin.Context) {
 	if c.Request.Method == "GET" {
-		var user []models.User
-		db.Count(&user)
-		fmt.Println(user)
-
 		c.HTML(http.StatusOK, "signup.tmpl", gin.H{})
 	} else if c.Request.Method == "POST" {
 		var form LoginForm
-		if err:=c.ShouldBind(&form); err == nil {
+		if err := c.ShouldBind(&form); err == nil {
 			if form.User == "demo" && form.Password == "demo" {
 				c.HTML(http.StatusAccepted, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
 			} else {

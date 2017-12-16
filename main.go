@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/pyprism/Hiren-UpBot/views"
-	"github.com/spf13/viper"
 	"github.com/danielkov/gin-helmet"
 	"github.com/gin-contrib/gzip"
+	"github.com/gin-gonic/gin"
+	"github.com/go-pg/pg"
 	"github.com/pyprism/Hiren-UpBot/models"
+	"github.com/pyprism/Hiren-UpBot/views"
+	"github.com/spf13/viper"
 	"log"
 	//"os"
 )
@@ -33,13 +32,17 @@ func main() {
 	}
 
 	// database
-	db, err := gorm.Open("postgres", "host=localhost"+" user="+viper.GetString("db_user")+
-		" dbname="+viper.GetString("db_name")+" sslmode=disable"+" password="+viper.GetString("db_password"))
-	if err != nil {
-		panic("failed to connect database")
-	}
+	db := pg.Connect(&pg.Options{
+		Database: viper.GetString("db_name"),
+		User:     viper.GetString("db_user"),
+		Password: viper.GetString("db_password"),
+	})
+
+	//dbErr := createSchema(db)
+	//if dbErr != nil {
+	//	panic(dbErr)
+	//}
 	defer db.Close()
-	db.AutoMigrate(&models.User{})
 
 	// routers
 	router.GET("/", views.Login)
@@ -48,4 +51,14 @@ func main() {
 	router.POST("/signup/", views.SignUp)
 
 	log.Fatal(router.Run(viper.GetString("port")))
+}
+
+func createSchema(db *pg.DB) error {
+	for _, model := range []interface{}{&models.User{}} {
+		err := db.CreateTable(model, nil)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
