@@ -1,10 +1,14 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+)
 
 type User struct {
-	gorm.Model
-	Name string
-	Password string
-	Admin bool
+	ID        uint `gorm:"primary_key"`
+	Name      string
+	Password  string
+	Admin     bool
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
