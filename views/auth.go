@@ -109,6 +109,7 @@ func SignUp(c *gin.Context) {
 				user.Admin = false
 				affected, err := hiren.Insert(user)
 				if err != nil {
+					panic(err.Error())
 					panic(err)
 				}
 				fmt.Println(affected)
