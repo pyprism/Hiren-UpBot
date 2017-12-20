@@ -5,9 +5,7 @@ import (
 	"github.com/danielkov/gin-helmet"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/pyprism/Hiren-UpBot/models"
+	"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
 	"log"
@@ -32,14 +30,7 @@ func main() {
 	}
 
 	// database
-	db, err := gorm.Open("postgres", "host=localhost"+" user="+viper.GetString("db_user")+
-		" dbname="+viper.GetString("db_name")+" sslmode=disable"+" password="+viper.GetString("db_password"))
-	if err != nil {
-		panic("failed to connect database")
-	}
-	defer db.Close()
-	//db.DropTable(&models.User{})
-	db.AutoMigrate(&models.User{})
+	db.Init()
 
 	// routers
 	router.GET("/", views.Login)
