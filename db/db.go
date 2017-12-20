@@ -18,8 +18,9 @@ func Init() {
 	}
 	//defer db.Close()
 	db.ShowSQL(true)
-	db.DropTables(&models.User{})
+	//db.DropTables(&models.User{})
 	db.CreateTables(&models.User{})
+	db.CreateUniques(new(models.User))
 }
 
 func GetDB() *xorm.Engine {
