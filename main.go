@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/danielkov/gin-helmet"
 	"github.com/gin-contrib/gzip"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/views"
@@ -31,6 +32,10 @@ func main() {
 
 	// database
 	db.Init()
+
+	// cookie based session
+	store := sessions.NewCookieStore([]byte(viper.GetString("secret_key")))
+	router.Use(sessions.Sessions("bunny", store))
 
 	// routers
 	router.GET("/", views.Login)
