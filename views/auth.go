@@ -8,6 +8,7 @@ import (
 	"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/models"
 	"golang.org/x/crypto/bcrypt"
+	//"log"
 )
 
 type LoginForm struct {
@@ -109,12 +110,11 @@ func SignUp(c *gin.Context) {
 				user.Admin = false
 				affected, err := hiren.Insert(user)
 				if err != nil {
-					panic(err.Error())
-					panic(err)
+					c.HTML(http.StatusNotAcceptable, "signup.tmpl", gin.H{"status": "Username already exists!"})
 				}
-				fmt.Println(affected)
-				fmt.Println(user.Id)
-				c.HTML(http.StatusForbidden, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
+				if affected == 1 {
+					c.HTML(http.StatusAccepted, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
+				}
 			}
 
 		} else {
