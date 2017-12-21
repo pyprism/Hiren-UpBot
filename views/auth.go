@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/models"
+	"github.com/pyprism/Hiren-UpBot/utils"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 )
@@ -69,6 +70,7 @@ func Login(c *gin.Context) {
 				ok = CheckPasswordHash(form.Password, user.Password)
 			}
 			if has && ok {
+				utils.SetSession(user.UserName)
 				c.HTML(http.StatusAccepted, "login.tmpl", gin.H{"status": "connected"})
 			} else {
 				c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
