@@ -51,6 +51,7 @@ func CheckPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
+// login page
 func Login(c *gin.Context) {
 	if c.Request.Method == "GET" {
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{})
@@ -58,15 +59,16 @@ func Login(c *gin.Context) {
 		var form LoginForm
 		if err := c.ShouldBind(&form); err == nil {
 			var hiren = db.GetDB()
-			var id int64
-			has, err := hiren.Table("user").Where("user_name = ?", form.User).Get(&id)
+			var user = models.User{UserName:form.User}
+			has, err := hiren.Get(&user)
 			if err != nil {
 				log.Fatal(err)
 			}
+			var ok bool
 			if has {
-
+				ok = CheckPasswordHash(form.Password, user.Password)
 			}
-			if form.User == "demo" && form.Password == "demo" {
+			if has && ok {
 				c.HTML(http.StatusAccepted, "login.tmpl", gin.H{"status": "connected"})
 			} else {
 				c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
@@ -78,6 +80,7 @@ func Login(c *gin.Context) {
 	}
 }
 
+// sign up page
 func SignUp(c *gin.Context) {
 	if c.Request.Method == "GET" {
 		c.HTML(http.StatusOK, "signup.tmpl", gin.H{})
