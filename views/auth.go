@@ -57,6 +57,15 @@ func Login(c *gin.Context) {
 	} else if c.Request.Method == "POST" {
 		var form LoginForm
 		if err := c.ShouldBind(&form); err == nil {
+			var hiren = db.GetDB()
+			var id int64
+			has, err := hiren.Table("user").Where("user_name = ?", form.User).Get(&id)
+			if err != nil {
+				log.Fatal(err)
+			}
+			if has {
+
+			}
 			if form.User == "demo" && form.Password == "demo" {
 				c.HTML(http.StatusAccepted, "login.tmpl", gin.H{"status": "connected"})
 			} else {
