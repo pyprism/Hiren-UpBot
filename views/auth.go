@@ -8,7 +8,7 @@ import (
 	"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/models"
 	"golang.org/x/crypto/bcrypt"
-	//"log"
+	"log"
 )
 
 type LoginForm struct {
@@ -80,13 +80,13 @@ func SignUp(c *gin.Context) {
 			user := new(models.User)
 			count, err := hiren.Count(user)
 			if err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
 
 			if count == 0 {
 				hash, err := HashPassword(form.Password)
 				if err != nil {
-					panic(err)
+					log.Fatal(err)
 				}
 				user := new(models.User)
 				user.UserName = form.User
@@ -94,7 +94,7 @@ func SignUp(c *gin.Context) {
 				user.Admin = true
 				affected, err := hiren.Insert(user)
 				if err != nil {
-					panic(err)
+					log.Fatal(err)
 				}
 				fmt.Println(affected)
 				fmt.Println(user.Id)
@@ -102,7 +102,7 @@ func SignUp(c *gin.Context) {
 			} else {
 				hash, err := HashPassword(form.Password)
 				if err != nil {
-					panic(err)
+					log.Fatal(err)
 				}
 				user := new(models.User)
 				user.UserName = form.User
