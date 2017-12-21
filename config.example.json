@@ -2,5 +2,6 @@
   "db_name": "",
   "db_user": "",
   "db_password": "",
-  "port": ":8000"
+  "port": ":8000",
+  "secret_key": ""
 }
