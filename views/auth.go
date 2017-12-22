@@ -58,25 +58,20 @@ func Login(c *gin.Context) {
 	} else if c.Request.Method == "POST" {
 		var form LoginForm
 		if err := c.ShouldBind(&form); err == nil {
-			//var hiren = db.GetDB()
-			//var user = models.User{UserName: form.User}
-			//has, err := hiren.Get(&user)
-			//if err != nil {
-			//	log.Fatal(err)
-			//}
-			//var ok bool
-			//if has {
-			//	ok = CheckPasswordHash(form.Password, user.Password)
-			//}
-			//if has && ok {
-			//	session := sessions.Default(c)
-			//	session.Set("username", form.User)
-			//	session.Set("authenticated", true)
-			//	session.Save()
-			//	c.Redirect(http.StatusMovedPermanently, "/dashboard/")
-			//} else {
-				c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
-			//}
+			var hiren = db.GetDB()
+			var user models.User
+			hiren.Where(&models.User{UserName: form.User}).First(&user)
+			if user.ID > 0 {  // if user found
+				ok := CheckPasswordHash(form.Password, user.Password)
+				if ok {
+					session := sessions.Default(c)
+					session.Set("username", form.User)
+					session.Set("authenticated", true)
+					session.Save()
+					c.Redirect(http.StatusMovedPermanently, "/dashboard/")
+				}
+			}
+			c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
 		} else {
 			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"status": err.Error()})
 		}
