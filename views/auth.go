@@ -1,7 +1,6 @@
 package views
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -59,25 +58,25 @@ func Login(c *gin.Context) {
 	} else if c.Request.Method == "POST" {
 		var form LoginForm
 		if err := c.ShouldBind(&form); err == nil {
-			var hiren = db.GetDB()
-			var user = models.User{UserName: form.User}
-			has, err := hiren.Get(&user)
-			if err != nil {
-				log.Fatal(err)
-			}
-			var ok bool
-			if has {
-				ok = CheckPasswordHash(form.Password, user.Password)
-			}
-			if has && ok {
-				session := sessions.Default(c)
-				session.Set("username", form.User)
-				session.Set("authenticated", true)
-				session.Save()
-				c.Redirect(http.StatusMovedPermanently, "/dashboard/")
-			} else {
+			//var hiren = db.GetDB()
+			//var user = models.User{UserName: form.User}
+			//has, err := hiren.Get(&user)
+			//if err != nil {
+			//	log.Fatal(err)
+			//}
+			//var ok bool
+			//if has {
+			//	ok = CheckPasswordHash(form.Password, user.Password)
+			//}
+			//if has && ok {
+			//	session := sessions.Default(c)
+			//	session.Set("username", form.User)
+			//	session.Set("authenticated", true)
+			//	session.Save()
+			//	c.Redirect(http.StatusMovedPermanently, "/dashboard/")
+			//} else {
 				c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
-			}
+			//}
 		} else {
 			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"status": err.Error()})
 		}
@@ -94,44 +93,36 @@ func SignUp(c *gin.Context) {
 		if err := c.ShouldBind(&form); err == nil {
 
 			var hiren = db.GetDB()
-			user := new(models.User)
-			count, err := hiren.Count(user)
-			if err != nil {
-				log.Fatal(err)
-			}
+			var count int64
+			hiren.Model(models.User{}).Count(&count)
 
 			if count == 0 {
 				hash, err := HashPassword(form.Password)
 				if err != nil {
 					log.Fatal(err)
 				}
-				user := new(models.User)
-				user.UserName = form.User
-				user.Password = hash
-				user.Admin = true
-				affected, err := hiren.Insert(user)
-				if err != nil {
-					log.Fatal(err)
+				user := models.User{UserName: form.User, Password: hash, Admin: true}
+				hiren.Create(&user)
+				success := hiren.NewRecord(user)
+				if !success {
+					c.HTML(http.StatusCreated, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
+				} else {
+					c.HTML(http.StatusForbidden, "signup.tmpl", gin.H{"status": "Username already exists!"})
 				}
-				fmt.Println(affected)
-				fmt.Println(user.Id)
-				c.HTML(http.StatusAccepted, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
 			} else {
 				hash, err := HashPassword(form.Password)
 				if err != nil {
 					log.Fatal(err)
 				}
-				user := new(models.User)
-				user.UserName = form.User
-				user.Password = hash
-				user.Admin = false
-				affected, err := hiren.Insert(user)
-				if err != nil {
-					c.HTML(http.StatusNotAcceptable, "signup.tmpl", gin.H{"status": "Username already exists!"})
+				user := models.User{UserName: form.User, Password: hash, Admin: false}
+				hiren.Create(&user)
+				success := hiren.NewRecord(user)
+				if !success {
+					c.HTML(http.StatusCreated, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
+				} else {
+					c.HTML(http.StatusForbidden, "signup.tmpl", gin.H{"status": "Username already exists!"})
 				}
-				if affected == 1 {
-					c.HTML(http.StatusAccepted, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
-				}
+
 			}
 
 		} else {
