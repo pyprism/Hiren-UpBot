@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/models"
@@ -60,7 +61,7 @@ func Login(c *gin.Context) {
 		var form LoginForm
 		if err := c.ShouldBind(&form); err == nil {
 			var hiren = db.GetDB()
-			var user = models.User{UserName:form.User}
+			var user = models.User{UserName: form.User}
 			has, err := hiren.Get(&user)
 			if err != nil {
 				log.Fatal(err)
@@ -70,7 +71,9 @@ func Login(c *gin.Context) {
 				ok = CheckPasswordHash(form.Password, user.Password)
 			}
 			if has && ok {
-				utils.SetSession(user.UserName)
+				session := sessions.Default(c)
+				session.Set("username", form.User)
+				session.Save()
 				c.HTML(http.StatusAccepted, "login.tmpl", gin.H{"status": "connected"})
 			} else {
 				c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
