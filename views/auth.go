@@ -140,3 +140,12 @@ func SignUp(c *gin.Context) {
 
 	}
 }
+
+// logout and stfu
+func Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Set("username", "")
+	session.Set("authenticated", false)
+	session.Save()
+	c.Redirect(http.StatusMovedPermanently, "/")
+}
