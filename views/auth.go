@@ -73,6 +73,7 @@ func Login(c *gin.Context) {
 			if has && ok {
 				session := sessions.Default(c)
 				session.Set("username", form.User)
+				session.Set("authenticated", true)
 				session.Save()
 				c.HTML(http.StatusAccepted, "login.tmpl", gin.H{"status": "connected"})
 			} else {
