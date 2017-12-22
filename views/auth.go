@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/models"
-	"github.com/pyprism/Hiren-UpBot/utils"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 )
@@ -75,7 +74,7 @@ func Login(c *gin.Context) {
 				session.Set("username", form.User)
 				session.Set("authenticated", true)
 				session.Save()
-				c.HTML(http.StatusAccepted, "login.tmpl", gin.H{"status": "connected"})
+				c.Redirect(http.StatusMovedPermanently, "/dashboard/")
 			} else {
 				c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
 			}
