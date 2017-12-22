@@ -16,30 +16,6 @@ type LoginForm struct {
 	Password string `form:"password" binding:"required"`
 }
 
-//var db *gorm.DB
-//
-//func init() {
-//	viper.SetConfigName("config")
-//	viper.AddConfigPath(".")
-//	err := viper.ReadInConfig()
-//	if err != nil { // Handle errors reading the config file
-//		panic(fmt.Errorf("Fatal error config file: %s \n", err))
-//	}
-//
-//	db, err := gorm.Open("postgres", "host=localhost"+" user="+viper.GetString("db_user")+
-//		" dbname="+viper.GetString("db_name")+" sslmode=disable"+" password="+viper.GetString("db_password"))
-//	if err != nil {
-//		panic("failed to connect database")
-//	}
-//	//defer db.Close()
-//}
-
-//func x() {
-//	var dbx = db.GetDB()
-//	user := new(models.User)
-//	total, err := dbx.Count(user)
-//	fmt.Println(total, err)
-//}
 
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
