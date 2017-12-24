@@ -6,7 +6,7 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/pyprism/Hiren-UpBot/db"
+	//"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
 	"log"
@@ -31,7 +31,7 @@ func main() {
 	}
 
 	// database
-	db.Init()
+	//db.Init()
 
 	// cookie based session
 	store := sessions.NewCookieStore([]byte(viper.GetString("secret_key")))
