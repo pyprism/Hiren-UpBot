@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -48,4 +49,18 @@ func (h *Hiren) UserCreate(username, hash string, admin bool) bool {
 	user := models.User{UserName: username, Password: hash, Admin: admin}
 	db.Create(&user)
 	return db.NewRecord(user)
+}
+
+func (h *Hiren) FindUserByUsername(username string) (models.User, error) {
+	var user models.User
+	var error error
+	db.Where(&models.User{UserName: username}).First(&user)
+	if user.ID == 0 {
+		error = errors.New("not found")
+		return user, error
+	} else {
+		error = nil
+		return user, error
+	}
+
 }
