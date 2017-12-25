@@ -9,7 +9,6 @@ import (
 	"github.com/pyprism/Hiren-UpBot/db"
 	//"github.com/pyprism/Hiren-UpBot/models"
 	"golang.org/x/crypto/bcrypt"
-	//"log"
 )
 
 type LoginForm struct {
@@ -27,17 +26,15 @@ func CheckPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-var xxx = db.Hiren{}
+var bunny = db.Hiren{}
 
 func init() {
-	xxx.Connect()
+	bunny.Connect()
 }
 
 // login page
 func Login(c *gin.Context) {
 	if c.Request.Method == "GET" {
-		count := xxx.UserCount()
-		log.Println(count)
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{})
 	} else if c.Request.Method == "POST" {
 		var form LoginForm
@@ -71,40 +68,28 @@ func SignUp(c *gin.Context) {
 		var form LoginForm
 		if err := c.ShouldBind(&form); err == nil {
 
-			//var hiren = db.GetDB()
-			//var count int64
-			//hiren.Model(models.User{}).Count(&count)
-			////count := xxx.Count()
-			////log.Println(count)
-			//
-			//if count == 0 {
-			//	hash, err := HashPassword(form.Password)
-			//	if err != nil {
-			//		log.Fatal(err)
-			//	}
-			//	user := models.User{UserName: form.User, Password: hash, Admin: true}
-			//	hiren.Create(&user)
-			//	success := hiren.NewRecord(user)
-			//	if !success {
-			//		c.HTML(http.StatusCreated, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
-			//	} else {
-			//		c.HTML(http.StatusForbidden, "signup.tmpl", gin.H{"status": "Username already exists!"})
-			//	}
-			//} else {
-			//	hash, err := HashPassword(form.Password)
-			//	if err != nil {
-			//		log.Fatal(err)
-			//	}
-			//	user := models.User{UserName: form.User, Password: hash, Admin: false}
-			//	hiren.Create(&user)
-			//	success := hiren.NewRecord(user)
-			//	if !success {
-			//		c.HTML(http.StatusCreated, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
-			//	} else {
-			//		c.HTML(http.StatusForbidden, "signup.tmpl", gin.H{"status": "Username already exists!"})
-			//	}
-			//
-			//}
+			count := bunny.UserCount()
+			hash, err := HashPassword(form.Password)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if count == 0 {
+				success := bunny.UserCreate(form.User, hash, true)
+				if !success {
+					c.HTML(http.StatusCreated, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
+				} else {
+					c.HTML(http.StatusForbidden, "signup.tmpl", gin.H{"status": "Username already exists!"})
+				}
+			} else {
+				success := bunny.UserCreate(form.User, hash, false)
+				if !success {
+					c.HTML(http.StatusCreated, "signup.tmpl", gin.H{"status": "Signed up successfully!"})
+				} else {
+					c.HTML(http.StatusForbidden, "signup.tmpl", gin.H{"status": "Username already exists!"})
+				}
+
+			}
 
 		} else {
 			c.HTML(http.StatusBadRequest, "signup.tmpl", gin.H{"status": err.Error()})
