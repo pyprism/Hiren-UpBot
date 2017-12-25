@@ -43,3 +43,9 @@ func (h *Hiren) UserCount() int64 {
 	db.Model(models.User{}).Count(&count)
 	return count
 }
+
+func (h *Hiren) UserCreate(username, hash string, admin bool) bool {
+	user := models.User{UserName: username, Password: hash, Admin: admin}
+	db.Create(&user)
+	return db.NewRecord(user)
+}
