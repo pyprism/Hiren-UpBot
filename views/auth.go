@@ -7,7 +7,6 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/pyprism/Hiren-UpBot/db"
-	//"github.com/pyprism/Hiren-UpBot/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -39,20 +38,21 @@ func Login(c *gin.Context) {
 	} else if c.Request.Method == "POST" {
 		var form LoginForm
 		if err := c.ShouldBind(&form); err == nil {
-			//var hiren = db.GetDB()
-			//var user models.User
-			//hiren.Where(&models.User{UserName: form.User}).First(&user)
-			//if user.ID > 0 { // if user found
-			//	ok := CheckPasswordHash(form.Password, user.Password)
-			//	if ok {
-			//		session := sessions.Default(c)
-			//		session.Set("username", form.User)
-			//		session.Set("authenticated", true)
-			//		session.Save()
-			//		c.Redirect(http.StatusMovedPermanently, "/dashboard/")
-			//	}
-			//}
-			c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
+			user, er := bunny.FindUserByUsername(form.User)
+			if er == nil { // if user was found
+				ok := CheckPasswordHash(form.Password, user.Password)
+				if ok {
+					session := sessions.Default(c)
+					session.Set("username", form.User)
+					session.Set("authenticated", true)
+					session.Save()
+					c.Redirect(http.StatusMovedPermanently, "/dashboard/")
+				} else {
+					c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
+				}
+			} else {
+				c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
+			}
 		} else {
 			c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"status": err.Error()})
 		}
