@@ -43,6 +43,7 @@ func main() {
 	router.GET("/signup/", views.SignUp)
 	router.POST("/signup/", views.SignUp)
 	router.GET("/logout/", views.Logout)
+	router.GET("/dashboard/", views.Home)
 
 	log.Fatal(router.Run(viper.GetString("port")))
 }
