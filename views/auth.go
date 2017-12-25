@@ -98,7 +98,7 @@ func SignUp(c *gin.Context) {
 	}
 }
 
-// logout and stfu
+// logout and stfo
 func Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("username", "")

@@ -32,7 +32,7 @@ func (h *Hiren) Connect() {
 	//db.DropTables(&models.User{})
 	//defer db.Close()
 
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.URL{})
 }
 
 func GetDB() *gorm.DB {
