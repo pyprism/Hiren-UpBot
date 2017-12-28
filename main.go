@@ -6,6 +6,8 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/pyprism/Hiren-UpBot/utils"
+
 	//"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
@@ -18,6 +20,7 @@ func main() {
 	//middleware
 	router.Use(helmet.Default())
 	router.Use(gzip.Gzip(gzip.BestCompression))
+	router.Use(utils.AuthMiddleware)
 
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/*")
