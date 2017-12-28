@@ -20,7 +20,7 @@ func main() {
 	//middleware
 	router.Use(helmet.Default())
 	router.Use(gzip.Gzip(gzip.BestCompression))
-	router.Use(utils.AuthMiddleware)
+	router.Use(utils.AuthMiddleware())
 
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/*")
