@@ -38,7 +38,7 @@ func main() {
 	// cookie based session
 	store := sessions.NewCookieStore([]byte(viper.GetString("secret_key")))
 	router.Use(sessions.Sessions("bunny", store))
-	router.Use(utils.AuthMiddleware)
+	router.Use(utils.AuthMiddleware())
 
 	// routers
 	router.GET("/", views.Login)
