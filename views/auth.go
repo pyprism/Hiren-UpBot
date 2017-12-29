@@ -102,7 +102,7 @@ func SignUp(c *gin.Context) {
 func Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("username", "")
-	session.Set("authenticated", false)
+	session.Set("authenticated", "")
 	session.Save()
 	c.Redirect(http.StatusMovedPermanently, "/")
 }

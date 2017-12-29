@@ -20,7 +20,6 @@ func main() {
 	//middleware
 	router.Use(helmet.Default())
 	router.Use(gzip.Gzip(gzip.BestCompression))
-	router.Use(utils.AuthMiddleware)
 
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/*")
@@ -39,6 +38,7 @@ func main() {
 	// cookie based session
 	store := sessions.NewCookieStore([]byte(viper.GetString("secret_key")))
 	router.Use(sessions.Sessions("bunny", store))
+	router.Use(utils.AuthMiddleware)
 
 	// routers
 	router.GET("/", views.Login)

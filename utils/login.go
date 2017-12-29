@@ -10,9 +10,9 @@ import (
 )
 
 func AuthMiddleware(c *gin.Context) {
-	if strings.HasPrefix(c.Request.URL.Path, "/login") ||
+	if strings.HasPrefix(c.Request.URL.Path, "/") ||
 		strings.HasPrefix(c.Request.URL.Path, "/signup") {
-			return
+		return
 	}
 	if strings.HasPrefix(c.Request.URL.Path, "/static") {
 		return
@@ -20,10 +20,13 @@ func AuthMiddleware(c *gin.Context) {
 
 	session := sessions.Default(c)
 	bunny := session.Get("authenticated")
-	if bunny == nil || bunny == false {
+	log.Println(bunny)
+	if bunny == nil || bunny == "" {
 		c.Redirect(http.StatusPermanentRedirect, "/")
 	} else {
+		log.Println("sasa")
 		c.Next()
 	}
+	log.Println(bunny)
 
 }
