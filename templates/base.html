@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+    <title>Hiren-UpBot: {{ title }}</title>
+    <!-- Favicon-->
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon"/>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css"/>
+
+    <!-- Bootstrap Core Css -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Waves Effect Css -->
+    <link href="../static/css/waves.min.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="../static/css/animate.min.css" rel="stylesheet" />
+
+
+    <!-- Custom Css -->
+    <link href="../static/css/style.min.css" rel="stylesheet"/>
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="../static/css/theme-deep-orange.min.css" rel="stylesheet" />
+</head>
+<body class="theme-deep-orange">
+<!-- Page Loader -->
+<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="preloader">
+            <div class="spinner-layer pl-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <p>Please wait...</p>
+    </div>
+</div>
+<!-- #END# Page Loader -->
+<div class="overlay"></div>
+<!-- #END# Overlay For Sidebars -->
+<nav class="navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+            <a href="javascript:void(0);" class="bars"></a>
+            <a class="navbar-brand" href="/dashboard/">Hiren-UpBot</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- Call Search -->
+                <li><a href="javascript:void(0);" class="js-search" data-close="true">Hello, {{ username }}</a></li>
+                <!-- #END# Call Search -->
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- #Top Bar -->
+<section>
+    <!-- Left Sidebar -->
+    <aside id="leftsidebar" class="sidebar">
+        <!-- Menu -->
+        <div class="menu">
+            <ul class="list">
+                <li class="header">MAIN NAVIGATION</li>
+                <li class="active">
+                    <a href="/dashboard/">
+                        <i class="material-icons">dashboard</i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/logout/">
+                        <i class="material-icons">keyboard_arrow_right</i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- #Menu -->
+        <!-- Footer -->
+        <div class="legal">
+            <div class="copyright">
+                &copy; 2016 - 2017 <a href="javascript:void(0);">AdminBSB - Material Design</a>.
+            </div>
+            <div class="version">
+                <b>Version: </b> 1.0.5
+            </div>
+        </div>
+        <!-- #Footer -->
+    </aside>
+    <!-- #END# Left Sidebar -->
+</section>
+
+{% block content %}{% endblock %}
+
+<!-- Jquery Core Js -->
+<script src="../static/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core Js -->
+<script src="../static/js/bootstrap.min.js"></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src="../static/js/waves.min.js"></script>
+
+<!-- Validation Plugin Js -->
+<script src="../static/js/jquery.validate.js"></script>
+
+<!-- Custom Js -->
+<script src="../static/js/admin.js"></script>
+</body>
+</html>
