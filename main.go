@@ -28,6 +28,7 @@ func main() {
 	router.Use(middleware.Logger())
 	router.Use(middleware.Recover())
 	router.Use(session.Middleware(sessions.NewCookieStore([]byte(viper.GetString("secret_key")))))
+	router.Use(utils.AuthMiddleware)
 	//router.Use(helmet.Default())
 	//router.Use(gzip.Gzip(gzip.BestCompression))
 	//
@@ -53,8 +54,8 @@ func main() {
 	router.POST("/", views.Login)
 	//router.GET("/signup/", views.SignUp)
 	//router.POST("/signup/", views.SignUp)
-	//router.GET("/logout/", views.Logout)
-	//router.GET("/dashboard/", views.Home)
+	router.GET("/logout/", views.Logout)
+	router.GET("/dashboard/", views.Dashboard)
 
 	router.Logger.Fatal(router.Start(viper.GetString("PORT")))
 }
