@@ -2,27 +2,32 @@ package main
 
 import (
 	"fmt"
-	"github.com/danielkov/gin-helmet"
-	"github.com/gin-contrib/gzip"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"github.com/pyprism/Hiren-UpBot/utils"
 
 	//"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
-	"log"
 )
 
 func main() {
-	router := gin.Default()
+	router := echo.New()
 
 	//middleware
-	router.Use(helmet.Default())
-	router.Use(gzip.Gzip(gzip.BestCompression))
+	router.Use(middleware.Logger())
+	router.Use(middleware.Recover())
+	//router.Use(helmet.Default())
+	//router.Use(gzip.Gzip(gzip.BestCompression))
+	//
+	router.Static("/static", "static")
+	//router.LoadHTMLGlob("templates/*")
 
-	router.Static("/static", "./static")
-	router.LoadHTMLGlob("templates/*")
+	renderer := utils.Renderer{
+		Debug: true,
+	}
+
+	router.Renderer = renderer
 
 	// config file
 	viper.SetConfigName("config")
@@ -36,19 +41,19 @@ func main() {
 	//db.Init()
 
 	// cookie based session
-	store := sessions.NewCookieStore([]byte(viper.GetString("secret_key")))
-	router.Use(sessions.Sessions("bunny", store))
-	router.Use(utils.AuthMiddleware())
+	//store := sessions.NewCookieStore([]byte(viper.GetString("secret_key")))
+	//router.Use(sessions.Sessions("bunny", store))
+	//router.Use(utils.AuthMiddleware())
 
 	// routers
 	router.GET("/", views.Login)
 	router.POST("/", views.Login)
-	router.GET("/signup/", views.SignUp)
-	router.POST("/signup/", views.SignUp)
-	router.GET("/logout/", views.Logout)
-	router.GET("/dashboard/", views.Home)
+	//router.GET("/signup/", views.SignUp)
+	//router.POST("/signup/", views.SignUp)
+	//router.GET("/logout/", views.Logout)
+	//router.GET("/dashboard/", views.Home)
 
-	log.Fatal(router.Run(viper.GetString("port")))
+	router.Logger.Fatal(router.Start(viper.GetString("PORT")))
 }
 
 //func main() {
