@@ -1,18 +1,24 @@
 package views
 
 import (
-	"log"
-	//"log"
 	"net/http"
+	"log"
 
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
+	"github.com/flosch/pongo2"
+	"github.com/labstack/echo-contrib/session"
+
+	"github.com/labstack/echo"
+
 	//"github.com/pyprism/Hiren-UpBot/db"
 )
 
-func Home(c *gin.Context) {
-	session := sessions.Default(c)
-	bunny := session.Get("authenticated")
-	log.Println(bunny)
-	c.HTML(http.StatusOK, "home.tmpl", gin.H{"title": "home", "username": "hiren"})
+func Dashboard(c echo.Context) error{
+
+	sess, _ := session.Get("session", c)
+	log.Println(sess.Values["authenticated"])
+	data := pongo2.Context{
+		"title": "Dashboard",
+		"username": sess.Values["username"],
+	}
+	return c.Render(http.StatusOK, "templates/dashboard.html", data)
 }
