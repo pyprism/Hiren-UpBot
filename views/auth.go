@@ -106,10 +106,10 @@ func Login(c echo.Context) error {
 //}
 
 // logout and stfo
-//func Logout(c *gin.Context) {
-//	session := sessions.Default(c)
-//	session.Delete("username")
-//	session.Delete("authenticated")
-//	session.Save()
-//	c.Redirect(http.StatusMovedPermanently, "/")
-//}
+func Logout(c echo.Context) error {
+	sess, _ := session.Get("session", c)
+	sess.Values["username"] = ""
+	sess.Values["authenticated"] = ""
+	sess.Save(c.Request(), c.Response())
+	return c.Redirect(http.StatusMovedPermanently, "/")
+}
