@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/middleware"
 	"github.com/pyprism/Hiren-UpBot/utils"
-
 	//"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
@@ -14,9 +15,18 @@ import (
 func main() {
 	router := echo.New()
 
+	// config file
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
+	if err != nil { // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
+
 	//middleware
 	router.Use(middleware.Logger())
 	router.Use(middleware.Recover())
+	router.Use(session.Middleware(sessions.NewCookieStore([]byte(viper.GetString("secret_key")))))
 	//router.Use(helmet.Default())
 	//router.Use(gzip.Gzip(gzip.BestCompression))
 	//
@@ -28,14 +38,6 @@ func main() {
 	}
 
 	router.Renderer = renderer
-
-	// config file
-	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
-	err := viper.ReadInConfig()
-	if err != nil { // Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
-	}
 
 	// database
 	//db.Init()
