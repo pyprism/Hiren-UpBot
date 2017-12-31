@@ -2,16 +2,13 @@ package views
 
 import (
 	"github.com/flosch/pongo2"
+	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/pyprism/Hiren-UpBot/db"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
-
-type LoginForm struct {
-	User     string `form:"username" binding:"required"`
-	Password string `form:"password" binding:"required"`
-}
 
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -41,6 +38,15 @@ func Login(c echo.Context) error {
 		if er == nil { // if user was found
 			ok := CheckPasswordHash(c.FormValue("password"), user.Password)
 			if ok {
+				sess, _ := session.Get("session", c)
+				sess.Options = &sessions.Options{
+					Path:     "/",
+					MaxAge:   86400 * 7,
+					HttpOnly: true,
+				}
+				sess.Values["username"] = c.FormValue("username")
+				sess.Values["authenticated"] = true
+				sess.Save(c.Request(), c.Response())
 				return c.Redirect(http.StatusPermanentRedirect, "/dashboard/")
 			} else {
 				data := pongo2.Context{
@@ -59,31 +65,6 @@ func Login(c echo.Context) error {
 	} else {
 		return c.String(http.StatusBadRequest, "f@ck off")
 	}
-	//if c.Request.Method == "GET" {
-	//	c.HTML(http.StatusOK, "login.tmpl", gin.H{})
-	//} else if c.Request.Method == "POST" {
-	//	var form LoginForm
-	//	if err := c.ShouldBind(&form); err == nil {
-	//		user, er := bunny.FindUserByUsername(form.User)
-	//		if er == nil { // if user was found
-	//			ok := CheckPasswordHash(form.Password, user.Password)
-	//			if ok {
-	//				session := sessions.Default(c)
-	//				session.Set("username", form.User)
-	//				session.Set("authenticated", true)
-	//				session.Save()
-	//				c.Redirect(http.StatusMovedPermanently, "/dashboard/")
-	//			} else {
-	//				c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
-	//			}
-	//		} else {
-	//			c.HTML(http.StatusForbidden, "login.tmpl", gin.H{"status": "Username/Password is not valid!"})
-	//		}
-	//	} else {
-	//		c.HTML(http.StatusBadRequest, "login.tmpl", gin.H{"status": err.Error()})
-	//	}
-	//
-	//}
 }
 
 // sign up page
