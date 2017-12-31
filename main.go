@@ -13,19 +13,8 @@ import (
 )
 
 func main() {
-<<<<<<< HEAD
-	router := gin.Default()
-
-	//middleware
-	router.Use(helmet.Default())
-	router.Use(gzip.Gzip(gzip.BestCompression))
-	router.Use(utils.AuthMiddleware())
-
-	router.Static("/static", "./static")
-	router.LoadHTMLGlob("templates/*")
-=======
 	router := echo.New()
->>>>>>> edea98f5a84f2f88fee6a11b19e6688f7d64c1a2
+
 
 	// config file
 	viper.SetConfigName("config")
