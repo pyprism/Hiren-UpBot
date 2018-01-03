@@ -2,7 +2,7 @@ package views
 
 import (
 	"github.com/flosch/pongo2"
-	//"github.com/gorilla/sessions"
+	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/pyprism/Hiren-UpBot/db"
@@ -39,11 +39,11 @@ func Login(c echo.Context) error {
 			ok := CheckPasswordHash(c.FormValue("password"), user.Password)
 			if ok {
 				sess, _ := session.Get("session", c)
-				//sess.Options = &sessions.Options{
-				//	Path:     "/",
-				//	MaxAge:   86400 * 7,
-				//	HttpOnly: true,
-				//}
+				sess.Options = &sessions.Options{
+					Path:     "/",
+					MaxAge:   86400 * 7,
+					HttpOnly: true,
+				}
 				sess.Values["username"] = c.FormValue("username")
 				sess.Values["authenticated"] = true
 				sess.Save(c.Request(), c.Response())
@@ -108,8 +108,13 @@ func Login(c echo.Context) error {
 // logout and stfo
 func Logout(c echo.Context) error {
 	sess, _ := session.Get("session", c)
+	sess.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   -1,
+		HttpOnly: true,
+	}
 	sess.Values["username"] = ""
 	sess.Values["authenticated"] = ""
 	sess.Save(c.Request(), c.Response())
-	return c.Redirect(http.StatusMovedPermanently, "/")
+	return c.Redirect(http.StatusSeeOther, "/")
 }
