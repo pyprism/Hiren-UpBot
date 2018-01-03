@@ -15,7 +15,6 @@ import (
 func main() {
 	router := echo.New()
 
-
 	// config file
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
@@ -56,6 +55,7 @@ func main() {
 	//router.POST("/signup/", views.SignUp)
 	router.GET("/logout/", views.Logout)
 	router.GET("/dashboard/", views.Dashboard)
+	router.Any("/add/", views.AddDomain)
 
 	router.Logger.Fatal(router.Start(viper.GetString("PORT")))
 }
