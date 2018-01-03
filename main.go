@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-playground/validator"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
@@ -11,6 +12,14 @@ import (
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
 )
+
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	return cv.validator.Struct(i)
+}
 
 func main() {
 	router := echo.New()
@@ -39,6 +48,7 @@ func main() {
 	}
 
 	router.Renderer = renderer
+	router.Validator = &CustomValidator{validator: validator.New()}
 
 	// database
 	//db.Init()
