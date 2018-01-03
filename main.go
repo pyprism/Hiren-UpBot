@@ -35,6 +35,7 @@ func main() {
 	//middleware
 	router.Use(middleware.Logger())
 	router.Use(middleware.Recover())
+	router.Use(middleware.Secure())
 	router.Use(session.Middleware(sessions.NewCookieStore([]byte(viper.GetString("secret_key")))))
 	router.Use(utils.AuthMiddleware)
 	//router.Use(helmet.Default())
