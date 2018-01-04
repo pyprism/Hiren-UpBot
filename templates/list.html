@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Host List
+                        </h2>
+                    </div>
+                    <div class="body table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>URL</th>
+                                <th>Created At</th>
+                                <th>Updated At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {%for hiren in urls %}
+                            <tr>
+                                <th>{{ hiren.Name }}</th>
+                                <th>{{ hiren.Url }}</th>
+                                <th>{{ hiren.CreatedAt }}</th>
+                                <th>{{ hiren.UpdatedAt }}</th>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
