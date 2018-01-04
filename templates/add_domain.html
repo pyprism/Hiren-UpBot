@@ -12,6 +12,20 @@
                     </div>
                     <div class="body">
                         <form class="form-horizontal" method="post">
+                            {%if error%}
+                            <div class="alert alert-danger" role="alert">
+                                <ul class="messages">
+                                {{ error }}
+                                </ul>
+                            </div>
+                            {% endif %}
+                            {%if success %}
+                            <div class="alert alert-success" role="alert">
+                                <ul class="messages">
+                                {{ success }}
+                                </ul>
+                            </div>
+                            {% endif %}
                             <div class="row clearfix">
                                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
                                     <label>Name</label>
