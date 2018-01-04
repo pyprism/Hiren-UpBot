@@ -80,3 +80,11 @@ func (h *Hiren) UrlCreate(name, url, username string, poll, alert int64) bool {
 	return db.NewRecord(urlObj)
 
 }
+
+func (h *Hiren) UrlList(username string) []models.URL {
+	var user models.User
+	var urls []models.URL
+	db.Where(&models.User{UserName: username}).First(&user)
+	db.Where("user_id = ?", user.ID).Find(&urls)
+	return urls
+}
