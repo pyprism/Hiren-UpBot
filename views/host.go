@@ -1,21 +1,19 @@
 package views
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/flosch/pongo2"
-	"github.com/go-playground/validator"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
+	"gopkg.in/go-playground/validator.v9"
+	"net/http"
 )
 
 type (
 	URL struct {
 		Name string `form:"name" validate:"required"`
 		Url  string `form:"url" validate:"required,url"`
-		Poll string `form:"poll" validate:"required,min=1"`
-		Slow string `form:"slow" validate:"required,min=1"`
+		Poll int    `form:"poll" validate:"required,min=1"`
+		Slow int    `form:"slow" validate:"required,min=1"`
 	}
 
 	CustomValidator struct {
@@ -24,8 +22,8 @@ type (
 )
 
 func AddDomain(c echo.Context) (err error) {
+	sess, _ := session.Get("session", c)
 	if c.Request().Method == "GET" {
-		sess, _ := session.Get("session", c)
 		data := pongo2.Context{
 			"title":    "Add New Host",
 			"username": sess.Values["username"],
@@ -33,18 +31,24 @@ func AddDomain(c echo.Context) (err error) {
 		return c.Render(http.StatusOK, "templates/add_domain.html", data)
 	} else if c.Request().Method == "POST" {
 		u := new(URL)
+
+		errData := pongo2.Context{
+			"title":    "Add New Host",
+			"username": sess.Values["username"],
+			"error":    "Data is not valid!",
+		}
+
 		if err = c.Bind(u); err != nil {
-			log.Println(err)
-			return
+			return c.Render(http.StatusConflict, "templates/add_domain.html", errData)
 		}
 		if err = c.Validate(u); err != nil {
-			log.Println(err)
-			return
+			return c.Render(http.StatusConflict, "templates/add_domain.html", errData)
 		}
 		sess, _ := session.Get("session", c)
 		data := pongo2.Context{
 			"title":    "Add New Host",
 			"username": sess.Values["username"],
+			"success":  "New host added.",
 		}
 		return c.Render(http.StatusOK, "templates/add_domain.html", data)
 	} else {
