@@ -64,3 +64,18 @@ func (h *Hiren) FindUserByUsername(username string) (models.User, error) {
 	}
 
 }
+
+func (h *Hiren) UrlCreate(name, url, username string, poll, alert int64) bool {
+	var user models.User
+	db.Where(&models.User{UserName: username}).First(&user)
+	urlObj := models.URL{
+		Name:            name,
+		Url:             url,
+		UserID:          models.User{UserName: username},
+		PollingInterval: poll,
+		AlertThreshold:  alert,
+	}
+	db.Create(&urlObj)
+	return db.NewRecord(urlObj)
+
+}
