@@ -7,8 +7,8 @@ type URL struct {
 	Name            string `gorm:"not null;unique"`
 	Url             string `gorm:"not null"`
 	UserID          int
-	PollingInterval string `gorm:"not null"`
-	AlertThreshold  string `gorm:"not null"`
+	PollingInterval int64 `gorm:"not null"`
+	AlertThreshold  int64 `gorm:"not null"`
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 }
