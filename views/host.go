@@ -4,22 +4,16 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
-	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 )
 
-type (
-	URL struct {
-		Name string `form:"name" validate:"required"`
-		Url  string `form:"url" validate:"required,url"`
-		Poll int    `form:"poll" validate:"required,min=1"`
-		Slow int    `form:"slow" validate:"required,min=1"`
-	}
+type URL struct {
+	Name string `form:"name" validate:"required"`
+	Url  string `form:"url" validate:"required,url"`
+	Poll int64    `form:"poll" validate:"required,min=1"`
+	Slow int64    `form:"slow" validate:"required,min=1"`
+}
 
-	CustomValidator struct {
-		validator *validator.Validate
-	}
-)
 
 func AddDomain(c echo.Context) (err error) {
 	sess, _ := session.Get("session", c)
@@ -50,7 +44,13 @@ func AddDomain(c echo.Context) (err error) {
 			"username": sess.Values["username"],
 			"success":  "New host added.",
 		}
-		return c.Render(http.StatusOK, "templates/add_domain.html", data)
+		var username , _ = sess.Values["username"].(string)
+		ok := bunny.UrlCreate(u.Name, u.Url, username, u.Poll, u.Slow)
+		if !ok {
+			return c.Render(http.StatusOK, "templates/add_domain.html", data)
+		} else {
+			return c.String(http.StatusConflict, "WTF ! Something bad happened :O !")  // lol :P
+		}
 	} else {
 		return c.String(http.StatusBadRequest, "f@ck off")
 	}
