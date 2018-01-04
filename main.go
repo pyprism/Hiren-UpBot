@@ -6,10 +6,9 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/middleware"
+	"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/utils"
 	"gopkg.in/go-playground/validator.v9"
-
-	//"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
 )
@@ -45,7 +44,8 @@ func main() {
 	router.Validator = &utils.CustomValidator{Validator: validator.New()}
 
 	// database
-	//db.Init()
+	bunny := db.Hiren{}
+	bunny.Connect()
 
 	// cookie based session
 	//store := sessions.NewCookieStore([]byte(viper.GetString("secret_key")))
