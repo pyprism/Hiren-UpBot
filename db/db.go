@@ -33,6 +33,7 @@ func (h *Hiren) Connect() {
 	//defer db.Close()
 
 	db.AutoMigrate(&models.User{}, &models.URL{}, &models.Mailgun{})
+	db.Model(&models.URL{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
 }
 
 func GetDB() *gorm.DB {
@@ -71,7 +72,7 @@ func (h *Hiren) UrlCreate(name, url, username string, poll, alert int64) bool {
 	urlObj := models.URL{
 		Name:            name,
 		Url:             url,
-		UserID:          models.User{UserName: username},
+		UserID:          user.ID,
 		PollingInterval: poll,
 		AlertThreshold:  alert,
 	}
