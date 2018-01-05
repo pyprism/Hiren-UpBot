@@ -9,6 +9,7 @@ type URL struct {
 	UserID          uint
 	PollingInterval int64 `gorm:"not null"`
 	AlertThreshold  int64 `gorm:"not null"`
+	NextRun 		time.Time   // cron next job tracker
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 }
