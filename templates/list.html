@@ -23,7 +23,7 @@
                             <tbody>
                             {%for hiren in urls %}
                             <tr>
-                                <th>{{ hiren.Name }}</th>
+                                <th><a href="{{ hiren.ID }}/">{{ hiren.Name }}</a></th>
                                 <th>{{ hiren.Url }}</th>
                                 <th>{{ hiren.CreatedAt }}</th>
                                 <th>{{ hiren.UpdatedAt }}</th>
