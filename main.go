@@ -60,6 +60,7 @@ func main() {
 	router.GET("/logout/", views.Logout)
 	router.GET("/dashboard/", views.Dashboard)
 	router.Any("/add/", views.AddDomain)
+	router.GET("/list/:id/", views.HostByID)
 	router.GET("/list/", views.List)
 
 	router.Logger.Fatal(router.Start(viper.GetString("PORT")))
