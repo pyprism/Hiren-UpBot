@@ -98,3 +98,17 @@ func (h *Hiren) FindHostById(username, id string) (models.URL, error) {
 		return url, err
 	}
 }
+
+func (h *Hiren) DeleteUrlByID(username, id string) error {
+	var user models.User
+	db.Where(&models.User{UserName: username}).First(&user) // just for security !
+
+	if user.ID == 0 {
+		err := errors.New("not found")
+		return err
+	} else {
+		var err error = nil
+		db.Delete(&models.URL{}, "id = ?", id)
+		return err
+	}
+}
