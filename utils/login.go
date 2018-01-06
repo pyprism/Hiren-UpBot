@@ -1,16 +1,12 @@
 package utils
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
-
-	//"log"
 )
-
 
 //func AuthMiddleware() gin.HandlerFunc  {
 //	return func(c *gin.Context) {
@@ -58,7 +54,6 @@ func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		sess, _ := session.Get("session", c)
 		bunny := sess.Values["authenticated"]
-		log.Println(bunny)
 		if bunny == nil || bunny != true {
 			return c.Redirect(http.StatusPermanentRedirect, "/")
 		} else {
@@ -68,4 +63,3 @@ func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 
 }
-
