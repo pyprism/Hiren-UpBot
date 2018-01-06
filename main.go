@@ -8,9 +8,9 @@ import (
 	"github.com/labstack/echo/middleware"
 	"github.com/pyprism/Hiren-UpBot/db"
 	"github.com/pyprism/Hiren-UpBot/utils"
-	"gopkg.in/go-playground/validator.v9"
 	"github.com/pyprism/Hiren-UpBot/views"
 	"github.com/spf13/viper"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 func main() {
@@ -60,6 +60,7 @@ func main() {
 	router.GET("/logout/", views.Logout)
 	router.GET("/dashboard/", views.Dashboard)
 	router.Any("/add/", views.AddDomain)
+	router.GET("/list/:id/delete/", views.DeleteUrl)
 	router.GET("/list/:id/", views.HostByID)
 	router.GET("/list/", views.List)
 
