@@ -112,3 +112,5 @@ func (h *Hiren) DeleteUrlByID(username, id string) error {
 		return err
 	}
 }
+
+func (h *Hiren) UpdateUrlById(username, id, name, url string)
