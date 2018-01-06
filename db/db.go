@@ -3,8 +3,6 @@ package db
 import (
 	"errors"
 	"fmt"
-	"log"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/pyprism/Hiren-UpBot/models"
@@ -36,10 +34,6 @@ func (h *Hiren) Connect() {
 
 	db.AutoMigrate(&models.User{}, &models.URL{}, &models.Mailgun{})
 	db.Model(&models.URL{}).AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
-}
-
-func GetDB() *gorm.DB {
-	return db
 }
 
 func (h *Hiren) UserCount() int64 {
@@ -91,13 +85,11 @@ func (h *Hiren) UrlList(username string) []models.URL {
 	return urls
 }
 
-func (h *Hiren) FindHostById(username, id string)(models.URL, error ) {
+func (h *Hiren) FindHostById(username, id string) (models.URL, error) {
 	var user models.User
 	var url models.URL
 	db.Where(&models.User{UserName: username}).First(&user)
-	db.Where("user_id = ?", user.ID).First(&url)
-	log.Println("sasasasasasassasasas: ", url.ID)
-	log.Println("sasasasasasassasasasassssssssssssssssssss: ", url)
+	db.Where("user_id = ? and id =?", user.ID, id).First(&url)
 	if user.ID == 0 || url.ID == 0 {
 		err := errors.New("not found")
 		return url, err
@@ -106,4 +98,3 @@ func (h *Hiren) FindHostById(username, id string)(models.URL, error ) {
 		return url, err
 	}
 }
-
