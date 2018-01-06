@@ -83,3 +83,14 @@ func HostByID(c echo.Context) error {
 		return c.Render(http.StatusFound, "templates/host_by_id.html", data)
 	}
 }
+
+func DeleteUrl(c echo.Context) error {
+	sess, _ := session.Get("session", c)
+	id := c.Param("id")
+	var username, _ = sess.Values["username"].(string)
+	if err := bunny.DeleteUrlByID(username, id); err != nil {
+		return c.String(http.StatusBadRequest, "Operation not permitted!")
+	} else {
+		return c.Redirect(http.StatusSeeOther, "/list/")
+	}
+}
